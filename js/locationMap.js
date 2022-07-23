@@ -13,7 +13,7 @@ window.addEventListener('load', function(){
 function locStartup(){
     console.log("Locations Array: ");
     console.log(locations);
-    displayLocation("locations[4][1][4][0]"); //This draws the markers on the basement image when the page loads
+    displayLocation("locations"); //This draws the markers on the basement image when the page loads
 }
 var canvas = document.getElementById("locationCanvas");
 var ctx = canvas.getContext("2d");
@@ -226,7 +226,7 @@ function checkLocExistence(){
     console.log("Checking if that location exists");
     locationExists = false;
     var locationToFind = document.getElementById("location").value.split(":")[0];
-    if(document.getElementById("location").value == "" || document.getElementById("location").value == "Full House"){//The search doesn't include the outer-most location entry (full house), and want to deactivate if the location line is empty.  
+    if(document.getElementById("location").value == "" || document.getElementById("location").value == "UMN Campus"){//The search doesn't include the outer-most location entry (full house), and want to deactivate if the location line is empty.  
         locationExists = true;
     }else{
         searchLocLayer("locations[4]", locationToFind);//comb through locations array
@@ -343,7 +343,7 @@ document.addEventListener('keydown', event => {
             if(newLocCreationStep == "newLoc_branch"){
                 newLoc_branch = document.getElementById("locCreateInput").value;
                 locationExists = false;
-                if(newLoc_branch == "Full House"){ //The search doesn't include the outer-most location entry (full house)  
+                if(newLoc_branch == "UMN Campus"){ //The search doesn't include the outer-most location entry (full house)  
                     locationExists = true;
                     foundLocIndex = locations;
                 }else{
