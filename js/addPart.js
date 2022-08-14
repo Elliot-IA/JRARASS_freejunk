@@ -840,6 +840,8 @@ function executeAddCat(){
 
     $.post("/addPart.html", {command: "addCat", data: JSON.stringify(catagories)});
 
+    breakAllLoopLayers = false;
+    
     /*document.getElementById("command_hiddenInput").value = "addCat";
     document.getElementById("data_hiddenInput").value = JSON.stringify(catagories);
     document.getElementById("hiddenForm").submit();*/
