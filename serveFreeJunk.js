@@ -131,7 +131,7 @@ function collect_ASTRAGLOBALS(){
     console.log("Grabing CATAGORIES & LOCATIONS from MongoDB and storing in global varibles...");
     astrasystem.collection("GLOBALS").find({"name": "catagoryMap"}).toArray((error, catData)=>{
         CATAGORIES = catData;
-        astrasystem.collection("GLOBALS").find({"name": "locationMap"}).toArray((error, locData)=>{
+        astrasystem_client.db("Universals").collection("GLOBALS").find({"name": "locationMap"}).toArray((error, locData)=>{
             LOCATIONS = locData;
             console.log("v/ CATAGORIES & LOCATIONS collected and stored!\n");
             generateSytleFiles();
@@ -255,7 +255,7 @@ function configureStandby(){
         res.json(n);
     });
     app.get("/getCATAGORIES", function(req, res){
-        astrasystem_client.db("Universals").collection("GLOBALS").findOne({name:"catagoryMap"},(error, data)=>{
+        astrasystem.collection("GLOBALS").findOne({name:"catagoryMap"},(error, data)=>{
             if(data == null){
                 console.log("-<>-(!) count not fetch CATAGORIES!");
             }else{
@@ -265,7 +265,7 @@ function configureStandby(){
         });
     });
     app.get("/getLOCATIONS", function(req, res){
-        astrasystem.collection("GLOBALS").findOne({name:"locationMap"},(error, data)=>{
+        astrasystem_client.db("Universals").collection("GLOBALS").findOne({name:"locationMap"},(error, data)=>{
             if(data == null){
                 console.log("-<>-(!) count not fetch LOCATIONS!");
             }else{
