@@ -10,10 +10,6 @@ const imageDataURI = require("image-data-uri");
 const https = require('https');
 const url = require('url');
 const imageToUri = require('image-to-uri');
-const request = require("request");
-const archiver = require('archiver');
-const fse = require('fs-extra');
-
 
 var n = null;
 var MASTER_INVENTORY = {};
@@ -85,7 +81,7 @@ function startup(){
 var processedImgs = 0;
 var numImgs = null; 
 function regenerateLocImgs(){
-    astrasystem.collection("LOCATION_Images").find().toArray((error, imagesArray)=>{
+    astrasystem_client.db("Universals").collection("LOCATION_Images").find().toArray((error, imagesArray)=>{
         numImgs = imagesArray.length;
         console.log("Regenerating Location Images...\t("+numImgs+")");
         imagesArray.forEach((img)=>{
@@ -259,7 +255,7 @@ function configureStandby(){
         res.json(n);
     });
     app.get("/getCATAGORIES", function(req, res){
-        astrasystem.collection("GLOBALS").findOne({name:"catagoryMap"},(error, data)=>{
+        astrasystem_client.db("Universals").collection("GLOBALS").findOne({name:"catagoryMap"},(error, data)=>{
             if(data == null){
                 console.log("-<>-(!) count not fetch CATAGORIES!");
             }else{
@@ -509,7 +505,7 @@ function updateLocArray(newLocArray){
     LOC_content = LOC_array.join("\n");
     fs.writeFileSync("./Data_Files/LOCATIONS.js", LOC_content);*/
     LOCATIONS = newLocArray;
-    astrasystem.collection("GLOBALS").updateOne({name: "locationMap"}, {$set: {data: newLocArray}}).then((err,data)=>{
+    astrasystem_client.db("Universals").collection("GLOBALS").updateOne({name: "locationMap"}, {$set: {data: newLocArray}}).then((err,data)=>{
         console.log("Loc Array Updated! Is now: "+LOCATIONS);    
     });    //DB
 }
@@ -648,7 +644,7 @@ function storeImage(name, URI, type){
             }
         });
     }else if(type == "locImg"){
-        astrasystem.collection("LOCATION_Images").insertOne({
+        astrasystem_client.db("Universals").collection("LOCATION_Images").insertOne({
             name:name,
             uri: URI
         },(error, data)=>{
@@ -694,6 +690,9 @@ function closeProgram(){
 
 ////////////////////////////////////INSTAPULL//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+const request = require("request");
+const archiver = require('archiver');
+const fse = require('fs-extra');
 
 app.get("/pullInstabatch", function(req, res){fetchInstagramBatch(5,res)});
 
