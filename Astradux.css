@@ -58,8 +58,6 @@ button{
 #menuContainer{
     display: inline;
     padding: 3px;
-    border-left: black 1px solid;
-    border-right: black 1px solid;
     font-family: veranda;
     font-size: 18px;
     text-decoration: none;
