@@ -13,7 +13,6 @@ const imageToUri = require('image-to-uri');
 
 var n = null;
 var MASTER_INVENTORY = {};
-//var MASTER_INVENTORY_vnums = {};
 var CATAGORIES = null;
 var LOCATIONS = null;
 
@@ -37,7 +36,7 @@ app.listen(PORT, function(){
 const { MongoClient, ServerApiVersion } = require('mongodb');
 var account = "JunkLord";
 
-var totalConnections = 2;
+var totalConnections = 4;
 var connections = 0;
 
 const data_uri = "mongodb+srv://respect123:Pulsar78@cluster0.j2ptc.mongodb.net/?retryWrites=true&w=majority";
@@ -46,6 +45,13 @@ const astrasystem_client = new MongoClient(data_uri, { useNewUrlParser: true, us
 const imgs1_uri = "mongodb+srv://Napoleon1234:socialEntreprenuer78@cluster0.iwt2p.mongodb.net/?retryWrites=true&w=majority";
 var imagesCluster1 = "";
 const imagesCluster1_client = new MongoClient(imgs1_uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+const imgs2_uri = "mongodb+srv://Napoleon78:SocialEntreprenuer78@cluster0.4ujuymr.mongodb.net/?retryWrites=true&w=majority";
+var imagesCluster2 = "";
+const imagesCluster2_client = new MongoClient(imgs1_uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+const imgs3_uri = "mongodb+srv://Napoleon78:SocialEntreprenuer78@cluster0.exasp4k.mongodb.net/?retryWrites=true&w=majority";
+var imagesCluster3 = "";
+const imagesCluster3_client = new MongoClient(imgs1_uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
 
 function connectToDBs(){
     console.log("Connecting to Databases...");
@@ -63,12 +69,26 @@ function connectToDBs(){
         connections++;
         connectionTreshold();
     });
+    imagesCluster2_client.connect((res,err)=>{
+        console.log("~imagesCluster1 Connection Established~");
+        console.log("res: "+res+" err: "+err);
+        imagesCluster2 = imagesCluster2_client.db("database").collection("collection");
+        connections++;
+        connectionTreshold();
+    });
+    imagesCluster3_client.connect((res,err)=>{
+        console.log("~imagesCluster1 Connection Established~");
+        console.log("res: "+res+" err: "+err);
+        imagesCluster3 = imagesCluster3_client.db("database").collection("collection");
+        connections++;
+        connectionTreshold();
+    });
 }
 var collectionConnections = [];
 function connectionTreshold(){
     if(connections == totalConnections){
         startup();
-        collectionConnections = [astrasystem, imagesCluster1]; 
+        collectionConnections = [astrasystem, imagesCluster1, imagesCluster2, imagesCluster3]; 
     }
 }
 
