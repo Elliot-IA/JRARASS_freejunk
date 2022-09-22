@@ -157,6 +157,12 @@ function startup(){
             $("#locationAniCurtain")[0].style="display: none;";
         };
     }
+    if(getCookie("userToken") != ''){
+        //This means the user DOES have a cookie token
+    }else{
+        //This means the user DOES NOT have a cookie token
+        setCookie("userToken", generateUserToken(12), 100000);
+    }
 }
 
 window.addEventListener('resize',()=> {
@@ -777,9 +783,17 @@ function zoomImg(){
         document.getElementById("zoomActive_meta").setAttribute('content',"no");
         document.getElementById("zoomImgCurtain").style.display = "none";
         document.getElementById("zoomImg").style.display = "none";
+        document.getElementById("enhanceBtn").style.display = "none";
     }else if(document.getElementById("zoomActive_meta").getAttribute('content')=="no"){
         document.getElementById("zoomActive_meta").setAttribute('content',"yes");
         document.getElementById("zoomImgCurtain").style.display = "block";
+        document.getElementById("enhanceBtn").style.display = "block";
+        document.getElementById("enhanceBtn").style.backgroundColor = "white";
+        document.getElementById("enhanceBtn").style.color = "#2e2e2e";
+        setTimeout(()=>{
+            document.getElementById("enhanceBtn").style.backgroundColor = "";
+            document.getElementById("enhanceBtn").style.color = "";
+        },10);
         document.getElementById("zoomImg").style.display = "inline-block";
         if(device == "webpage"){
             document.getElementById("zoomImg").style.marginLeft = (document.body.clientWidth-document.getElementById("zoomImg").clientWidth)/2-6;

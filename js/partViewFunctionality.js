@@ -70,9 +70,10 @@ function exit_partView(){
 }
 
 function exit_zoomImg(){
-    document.getElementById("zoomImgCurtain").style.display = "none";
-    document.getElementById("zoomImg").style.display = "none";
-    document.getElementById("zoomActive_meta").setAttribute('content',"no");
+    zoomImg();
+    //document.getElementById("zoomImgCurtain").style.display = "none";
+    //document.getElementById("zoomImg").style.display = "none";
+    //document.getElementById("zoomActive_meta").setAttribute('content',"no");
 }
 
 function scalePartViewToWindow(){

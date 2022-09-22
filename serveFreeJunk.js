@@ -20,12 +20,6 @@ var LOCATIONS = null;
 app.use(express.static(path.join(__dirname, ".")));
 app.use(bodyParser.json({limit: '200mb'}));
 app.use(bodyParser.urlencoded({limit: '200mb', extended: true}));
-/*app.use((req, res, next) => {
-    res.append('Cache-Control', 'no-cache');
-    //res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    //res.append('Access-Control-Allow-Headers', 'Content-Type');
-    //next();
-});*/
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, function(){
     console.log("Server started on port 3000! Working Directory:"+path.join(__dirname, ".")+"\n");
@@ -198,7 +192,7 @@ function generateSytleFiles(){
     console.log(user.UserName);   // you'll get xxx
     console.log(user.Rolename);   // you'll get yyy
 
-    var colorsCSS_fileStructure = "#toolTitle,#goHome,#toolbox_label,#topbar,#createPathwayButton{\nbackground-color: "+colorsJSON_parsed.primaryColor+";\ncolor: "+colorsJSON_parsed.primaryTextColor+";\n}\n#cat1,#cat2,#cat3,#cat4,#AAPcat{\nbackground-color: "+colorsJSON_parsed.branchColor+";\ncolor: "+colorsJSON_parsed.branchTextColor+";\n}\n#cat1:hover,#cat2:hover,#cat3:hover,#cat4:hover,#AAPcat:hover{\nbackground-color: "+colorsJSON_parsed.branchHoverColor+";\n}\n#cat1_end,#cat2_end,#cat3_end,#cat4_end,#AAPcat_end{\nbackground-color: "+colorsJSON_parsed.leafColor+";\ncolor: "+colorsJSON_parsed.leafTextColor+";\n}\n#cat1_end:hover,#cat2_end:hover,#cat3_end:hover,#cat4_end:hover,#AAPcat_end:hover{\nbackground-color: "+colorsJSON_parsed.leafHoverColor+";\n}\#goHome:hover,.onPage{\nbackground-color: "+colorsJSON_parsed.onPageColor+";\n}    \n#menuContainer{border-left:"+colorsJSON_parsed.primaryTextColor+" 1px solid;\nborder-right:"+colorsJSON_parsed.primaryTextColor+" 1px solid;\n}\na:link,a:visited{\ncolor:"+colorsJSON_parsed.primaryTextColor+"\n}";
+    var colorsCSS_fileStructure = "#toolTitle,#goHome,#toolbox_label,#topbar,#createPathwayButton{\nbackground-color: "+colorsJSON_parsed.primaryColor+";\ncolor: "+colorsJSON_parsed.primaryTextColor+";\n}\n#createPathwayButton:hover{\nbackground-color: "+colorsJSON_parsed.onPageColor+";\n}\n#cat1,#cat2,#cat3,#cat4,#AAPcat{\nbackground-color: "+colorsJSON_parsed.branchColor+";\ncolor: "+colorsJSON_parsed.branchTextColor+";\n}\n#cat1:hover,#cat2:hover,#cat3:hover,#cat4:hover,#AAPcat:hover{\nbackground-color: "+colorsJSON_parsed.branchHoverColor+";\n}\n#cat1_end,#cat2_end,#cat3_end,#cat4_end,#AAPcat_end{\nbackground-color: "+colorsJSON_parsed.leafColor+";\ncolor: "+colorsJSON_parsed.leafTextColor+";\n}\n#cat1_end:hover,#cat2_end:hover,#cat3_end:hover,#cat4_end:hover,#AAPcat_end:hover{\nbackground-color: "+colorsJSON_parsed.leafHoverColor+";\n}\#goHome:hover,.onPage{\nbackground-color: "+colorsJSON_parsed.onPageColor+";\n}    \n#menuContainer{border-left:"+colorsJSON_parsed.primaryTextColor+" 1px solid;\nborder-right:"+colorsJSON_parsed.primaryTextColor+" 1px solid;\n}\na:link,a:visited{\ncolor:"+colorsJSON_parsed.primaryTextColor+"\n}\n#addHours_btn{\n background-color: "+colorsJSON_parsed.primaryColor+";\ncolor: "+colorsJSON_parsed.primaryTextColor+";\n}\n.styledBtn{\nbackground-color: "+colorsJSON_parsed.primaryColor+";\ncolor: "+colorsJSON_parsed.primaryTextColor+";\nborder-radius: 6px;\n}\n.styledBtn:hover{\nbackground-color: "+colorsJSON_parsed.onPageColor+";\n}\n";
     var colorsJS_fileStructure = "";
     fs.writeFileSync("./Style_File/colors.css", colorsCSS_fileStructure);
     fs.writeFileSync("./Style_File/colors.js", colorsJS_fileStructure);

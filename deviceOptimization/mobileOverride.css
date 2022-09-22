@@ -515,3 +515,12 @@ body{
     height: 250px;
     width: 250px;
 }
+#enhanceBtn{
+    font-size:54px;
+    padding: 15px 55px 5px 55px;
+    bottom:100px;
+    opacity: 0.5;
+    color: black;
+    border: none;
+    border-radius: 80px
+}

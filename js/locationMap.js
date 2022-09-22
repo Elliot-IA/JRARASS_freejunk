@@ -482,5 +482,10 @@ if(activePage == "Astradux.html" || activePage == ""){
     }catch{}
 }
 
+////////////////////Location hours tool
+
+
+
+
 
 
