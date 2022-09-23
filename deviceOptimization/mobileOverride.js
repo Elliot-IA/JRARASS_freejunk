@@ -194,9 +194,12 @@ $("#searchBarCover")[0].onclick = ()=>{
         $("#search")[0].style = "float: right; width: 100%; height: 100%; position: absolute; top: 0px; margin-top: 0px; margin-right: 0px;";
     }
     $("#searchCurtain")[0].style.display = "block";
+    document.getElementById("inquiry").focus();
+    document.getElementById("inquiry").click();
     setTimeout(()=>{
         document.getElementById("inquiry").focus();
-    },100);
+        document.getElementById("inquiry").click();
+    },500);
 }
 function unfillSearchbar(){
     $("#inquiry")[0].style = "";

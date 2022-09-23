@@ -86,6 +86,23 @@ function connectionTreshold(){
     }
 }
 
+var userTokens = [];
+var adminTokens = [];
+
+var nullTokens = [];
+
+function addToken(tokenValue,tokenType, nullOrNot){
+    astrasystem_client.db("Universals").collection("GLOBALS").insertOne({"value": tokenValue, "dataType": tokenType, "nullToken": nullOrNot});
+    if(tokenType == "adminToken"){
+        adminTokens.push(tokenValue);
+    }else if(tokenType == "userToken"){
+        userToken.push(tokenValue);
+    }
+    if(nullOrNot){
+        nullTokens.push(tokenValue);
+    }
+}
+
 //#######     --Regenerate Files--     #######                 #######                 #######                 #######                 #######
 function startup(){
     console.log("\nInitiating startup procedure...\n");
@@ -127,18 +144,49 @@ function regenerateInvFiles(){
                 if(numFiles ==  processedFiles){
                     console.log("v/ Inventory File Regeneration Complete!\n");
                     //regenerateDataFiles();
-                    collect_ASTRAGLOBALS();
+                    pullTokens();
                 }
             });
         }else{
             console.log("/|\\no Inventory Files to store");
+            console.log("\\|/\n");
+            pullTokens();
+        }
+        console.log("result: "+JSON.stringify(MASTER_INVENTORY).substring(0,30));
+    });
+}
+function pullTokens(){
+    astrasystem_client.db("Universals").collection("GLOBALS").find({"name": "accessTokens"}).toArray((error, tokenData)=>{
+        var numTokens = tokenData.length;
+        console.log("Storing Inventory into MASTER_INVENTORY object...\t("+numFiles+")");
+        var storedTokens = 0;
+        if(numTokens != 0){
+            tokenData.forEach((token)=>{
+                console.log("Sorting token: "+JSON.stringify(token)+"...");
+                
+                if(token.null){
+                    nullTokens.push(token.value);
+                }
+                if(token.dataType == "userToken"){
+                    userToken.push(token.value);
+                }else if(token.dataType == "adminToken"){
+                    adminToken.push(token.value);
+                }
+                
+                storedTokens++;
+                if(numTokens ==  storedTokens){
+                    console.log("v/ All tokens sorted and stored!\n");
+                    collect_ASTRAGLOBALS();
+                }
+            });
+        }else{
+            console.log("/|\\no tokens to store");
             console.log("\\|/\n");
             collect_ASTRAGLOBALS();
         }
         console.log("result: "+JSON.stringify(MASTER_INVENTORY).substring(0,30));
     });
 }
-
 //#######     --Configure GET and POST Handling--     #######                 #######                 #######                 #######                 #######
 
 function collect_ASTRAGLOBALS(){
@@ -152,22 +200,6 @@ function collect_ASTRAGLOBALS(){
         });
     });
 }
-
-/*function regenerateDataFiles(){
-    astrasystem.collection("DATA_Files").find().toArray((error, dataFiles)=>{
-        var numFiles = dataFiles.length;
-        console.log("Regenerating Data Files...\t("+numFiles+")");
-        var processedFiles = 0;
-        dataFiles.forEach((file)=>{
-            generateFile(file.name, file.data, "./Data_Files/"+file.name);
-            processedFiles++;
-            if(numFiles ==  processedFiles){
-                console.log("v/ Data File Regeneration Complete!\n");
-                configureRequests();
-            }
-        });
-    });
-}*/
 function generateFile(fileName, fileContents, filePath){
     fs.writeFileSync(filePath, fileContents);
     console.log("Inv File: "+fileName+" - done regenerating");
