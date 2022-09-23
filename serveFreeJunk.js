@@ -158,7 +158,7 @@ function regenerateInvFiles(){
 function pullTokens(){
     astrasystem_client.db("Universals").collection("GLOBALS").find({"name": "accessTokens"}).toArray((error, tokenData)=>{
         var numTokens = tokenData.length;
-        console.log("Storing Inventory into MASTER_INVENTORY object...\t("+numFiles+")");
+        console.log("Pulling tokens into global token arrays...");
         var storedTokens = 0;
         if(numTokens != 0){
             tokenData.forEach((token)=>{
