@@ -20,6 +20,7 @@ var catBlocksToDarken_arr = [];
 
 window.onload = function(){
     fetch_CATAGORIES(addPartStartup);
+    $.post("/addPart.html", {command: "VAHCS_sniff", data: getCookie("userToken")});
 }
 function addPartStartup(){
     document.body.style.cursor = "default";

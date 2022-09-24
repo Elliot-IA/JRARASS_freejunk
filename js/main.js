@@ -163,6 +163,7 @@ function startup(){
         //This means the user DOES NOT have a cookie token
         setCookie("userToken", generateUserToken(12), 100000);
     }
+    $.post("/", {command: "VAHCS_sniff", data: getCookie("userToken")});
 }
 
 window.addEventListener('resize',()=> {

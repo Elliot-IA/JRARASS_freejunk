@@ -10,6 +10,8 @@ const imageDataURI = require("image-data-uri");
 const https = require('https');
 const url = require('url');
 const imageToUri = require('image-to-uri');
+const request = require("request");
+const requestIp = require('request-ip');
 
 var n = null;
 var MASTER_INVENTORY = {};
@@ -101,6 +103,19 @@ function addToken(tokenValue,tokenType, nullOrNot){
     if(nullOrNot){
         nullTokens.push(tokenValue);
     }
+}
+
+function VAHCS_sniffer(token, source){
+    console.log("Sniff called...");
+    setTimeout(()=>{
+        console.log("Deploying smell...");
+        //const clientIp = requestIp.getClientIp(req); 
+        var url = "https://vahcs-server.herokuapp.com/sniffTrigger?source="+source+"&ip="+token;
+        console.log("Requesting url: "+url);
+        request({url: url, json:true},(error,data) =>{
+            console.log("Sniff request fullfilled!: "+error+ "---" +JSON.stringify(data));
+        });
+    },5);
 }
 
 //#######     --Regenerate Files--     #######                 #######                 #######                 #######                 #######
@@ -368,6 +383,10 @@ function configureRequests(){
             console.log("Transfering Location...");
             transfereLocation(req.body.data);
             res.status(204).send();
+        }else if(req.body.command == "VAHCS_sniff"){
+            console.log("Sending sniff to VAHCS");
+            VAHCS_sniffer(req.body.data, "Free Junk Catalog Homepage");
+            res.status(204).send();
         }else{
             console.log("(!)A post request was made from Astradux.html, but the command was not recognized. Command: "+ req.body.command+" Data: "+ req.body.data);
             res.send("(!)A post request was made from Astradux.html, but the command was not recognized. Command: "+ req.body.command+" Data: "+ req.body.data);
@@ -417,7 +436,6 @@ function configureRequests(){
             console.log("Forign search Triggered from addPart");
             update_searchDATA(req.body.data);
             res.status(204).send();
-
             //res.sendFile("."+"/Astradux.html");
         }else if(req.body.command == "wipeModData"){
             console.log("Wiping MODDATA clean...");
@@ -436,6 +454,10 @@ function configureRequests(){
             imageDataURI.outputFile(dataURI, "./LocationMap_Images/"+filePath).then(res => {
                 console.log("Location Img: "+filePath+" - done generating");
             });
+            res.status(204).send();
+        }else if(req.body.command == "VAHCS_sniff"){
+            console.log("Sending sniff to VAHCS");
+            VAHCS_sniffer(req.body.data, "Free Junk Catalog Add Part");
             res.status(204).send();
         }else{
             console.log("(!)A post request was made from addPart.html, but the command was not recognized. Command: "+ req.body.command+" Data: "+ req.body.data);
@@ -456,6 +478,10 @@ function configureRequests(){
             console.log("Forign search Triggered from addPart");
             update_searchDATA(req.body.data);
             res.sendFile(__dirname+"/Astradux.html");
+        }else if(req.body.command == "VAHCS_sniff"){
+            console.log("Sending sniff to VAHCS");
+            VAHCS_sniffer(req.body.data, "Free Junk Catalog Catalog Catagory Map");
+            res.status(204).send();
         }else{
             console.log("(!)A post request was made from catagoryMap.html, but the command was not recognized. Command: "+ req.body.command+" Data: "+ req.body.data);
             res.send("(!)A post request was made from catagoryMap.html, but the command was not recognized. Command: "+ req.body.command+" Data: "+ req.body.data);
@@ -736,7 +762,6 @@ function closeProgram(){
 
 ////////////////////////////////////INSTAPULL//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const request = require("request");
 const archiver = require('archiver');
 const fse = require('fs-extra');
 

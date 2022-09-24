@@ -16,6 +16,7 @@ var insertSelectedCatTo_ = "inquiry";     //controls where the value of a catago
 
 window.onload = function(){ 
     fetch_CATAGORIES(catStartup);
+    $.post("/catagoryMap.html", {command: "VAHCS_sniff", data: getCookie("userToken")});
 }
 function catStartup(){    //Most of the heavy lifting in this file is done by two functions. This triggers the building 
     console.log("Raw Cataogies Array: "+catagories);        //of the catagory tree when the file loads
