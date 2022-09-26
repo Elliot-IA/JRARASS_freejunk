@@ -11,14 +11,6 @@ function generateUserToken(length){
     return result;
 }
 
-if(getCookie("userToken") != ''){
-    //This means the user DOES have a cookie token
-}else{
-    //This means the user DOES NOT have a cookie token
-    setCookie("userToken", generateUserToken(12), 100000);
-}
-
-function transformHomepageForUserView(){
-    a("col1").children.toArray.forEach(el=>{el.remove()});
-
+function transformHomepageForUserAdmin(){
+    document.getElementById("toolbox").style.display = "block";
 }

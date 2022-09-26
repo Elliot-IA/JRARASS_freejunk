@@ -312,6 +312,21 @@ function configureStandby(){
             }
         });
     });
+    app.get("/getUSERMODE", function(req, res){
+        var queryObject = url.parse(req.url,true).query;
+        console.log(">>>User Mode Fetch Request: query object: "+JSON.stringify(queryObject)+" <<->> token: "+queryObject.token);
+        var userType = "user";
+        if(JSON.stringify(userTokens).indexOf(queryObject.token) != -1){
+            res.send("user");
+        }else if(JSON.stringify(adminTokens).indexOf(queryObject.token) != -1){
+            res.json("admin");
+        }else{
+            res.json("user");
+            addToken(queryObject.token, "user", false);
+        }
+        
+        res.send(userType)
+    });
     app.get("/getn", function(req, res){
         res.json(n);
     });

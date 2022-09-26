@@ -17,6 +17,7 @@ input[type="text"] {
     border-radius: 14px;
     border-width: 3px;
     box-shadow: 0px 2px 4px 2px #cccccc;
+    border-color: black;
 }
 p{
     zoom: 2.49;

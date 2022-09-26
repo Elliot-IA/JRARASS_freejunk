@@ -1605,6 +1605,7 @@ button{
     right: 15px;
     bottom: 15px;
     border-radius: 4px;
+    display: none;
 }
 #toolTitle{
     font-family: monospace;
