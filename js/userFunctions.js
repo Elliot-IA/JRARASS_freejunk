@@ -22,7 +22,7 @@ function toggleUserMode(){
     }
 }
 
-toggleUserMode_tool(){
+function toggleUserMode_tool(){
     if(userMode == "user"){
         a("col1").innerHTML = userCol1_innerHTML;
         userMode = "admin";
