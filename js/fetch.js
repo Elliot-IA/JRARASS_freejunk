@@ -64,8 +64,6 @@ function fetch_USERMODE(callback){
         .then(data => {
         console.log("USERMODE fetched: "+ data);
         userMode = eval(data);
-        if(userMode == "admin"){
-           callback();
-        }
+        callback();
     });
 }

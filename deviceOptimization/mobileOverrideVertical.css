@@ -33,7 +33,7 @@
     right: 4%;
     border-radius: 20px 105px 105px 20px;
 }
-#viewPart{
+#viewPart,#itemClaim{
     border: 8px black solid;
     border-radius: 55px;
     background-image: url(../Style_File/partView_Background_Verticle.png);

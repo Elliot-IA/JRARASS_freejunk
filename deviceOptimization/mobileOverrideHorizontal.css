@@ -51,7 +51,7 @@ p{
     top: 24%;
     right: 1%;
 }
-#viewPart{
+#viewPart,#itemClaim{
     height: 70%;
     width: 82%;
     top:21%;

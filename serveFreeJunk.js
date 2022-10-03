@@ -91,8 +91,6 @@ function connectionTreshold(){
 var userTokens = [];
 var adminTokens = [];
 
-var nullTokens = [];
-
 function addToken(tokenValue,tokenType, nullOrNot){
     astrasystem_client.db("Universals").collection("GLOBALS").insertOne({"value": tokenValue, "dataType": tokenType, "nullToken": nullOrNot});
     if(tokenType == "adminToken"){

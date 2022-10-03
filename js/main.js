@@ -161,7 +161,7 @@ function startup(){
         //This means the user DOES have a cookie token
     }else{
         //This means the user DOES NOT have a cookie token
-        setCookie("userToken", generateUserToken(12), 100000);
+        setCookie("userToken", generateUserToken(), 100000);
     }
     $.post("/", {command: "VAHCS_sniff", data: getCookie("userToken")});
     fetch_USERMODE(transformHomepageForUserAdmin);
