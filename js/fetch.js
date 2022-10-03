@@ -63,7 +63,7 @@ function fetch_USERMODE(callback){
         .then(response => response.json())
         .then(data => {
         console.log("USERMODE fetched: "+ data);
-        userMode = eval(data);
+        userMode = data;
         callback();
     });
 }
