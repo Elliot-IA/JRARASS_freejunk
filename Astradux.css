@@ -191,7 +191,7 @@ button{
     background-color: white;
 }
 #itemClaim{
-    display: block;
+    display: none;
 }
 #curtian,#curtian2{
     z-index:50;
