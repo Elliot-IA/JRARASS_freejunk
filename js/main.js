@@ -164,7 +164,7 @@ function startup(){
         setCookie("userToken", generateUserToken(), 100000);
     }
     $.post("/", {command: "VAHCS_sniff", data: getCookie("userToken")});
-    fetch_USERMODE(transformHomepageForUserAdmin);
+    fetch_USERMODE(toggleUserMode);
 }
 
 window.addEventListener('resize',()=> {
