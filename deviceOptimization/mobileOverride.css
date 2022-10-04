@@ -525,3 +525,28 @@ body{
     border: none;
     border-radius: 80px
 }
+#claimBtn{
+    font-size: 8vw;
+    width: 79%;
+    margin: 20px;
+    border-radius: 30px;
+    padding: 9px;
+    background-color: #75ffff66;
+    border: 2px solid #afafff;
+    border-width: 2px 7px 8px 6px;
+    box-shadow: 0px 0px 11px 10px #ffffff;
+    font-family: fangsong;
+    font-style: oblique;
+    text-shadow: 0px 4px 20px #ffffff;
+    color: #000000;
+    font-weight: bolder;
+}
+#itemClaimedBanner{font-size: 100px;margin-top: 64px;font-weight: bolder;text-decoration: underline overline;font-style: oblique;}#claimed_fooTileWrapper{text-align: center;zoom: 2.35;margin-top: 7%;height: 70%;overflow: auto;}#claimed_btnBar{bottom: 45px;position: absolute;text-align: center;width: 100%;}#takeBtn{border-radius: 10px 10px 10px 20px;}#nevermindBtn{border-radius: 10px 10px 20px 10px;}
+.claimBtn{
+    font-size: 54px;
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid #7f7f7f;
+    border-width: 1px 2px 2px 3px;
+    font-weight: bolder;
+}

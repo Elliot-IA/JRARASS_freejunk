@@ -52,12 +52,7 @@ function startup(){
         }
         console.log("Reseting SEARCHQUERY Cookie...");
 
-        //$.post("/", {command: "resetSEARCHQUERY", data: "[\"\",\"\"]"});
         resetCookie("SEARCHQUERY");
-
-        /*document.getElementById("command_hiddenInput").value = "resetSEARCHQUERY";
-        document.getElementById("data_hiddenInput").value = "[\"\",\"\"]";
-        document.getElementById("hiddenForm").submit();*/
     }else{
         if(INVENTORYFiles_Count != 0){
             loadAndTileifyFrag(INVENTORYFiles_CycleOrder[INVENTORYFiles_CyclesRun], "Inventory");
@@ -107,20 +102,60 @@ function startup(){
     });
 
     document.getElementById("loadPartsButton").addEventListener("click", ()=>{
-        /*imgController.abort(); // aborting request
-        console.log('all img requests aborted and intented to be resumed');*/
         loadAndTileifyFrag(INVENTORYFiles_CycleOrder[INVENTORYFiles_CyclesRun], "Inventory");
         $("#loadingInventoryFileMessage")[0].style.display = "block";
         console.log("Next Inventory Fragment added to Inventory Array");
     });
-
+    
+    $("#claimBtn")[0].addEventListener("click",()=>{
+        var new_iframe = document.createElement("iframe");
+        document.body.appendChild(new_iframe);
+        new_iframe.style.display = "none";
+        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]));
+        setTimeout(()=>{new_iframe.remove()},1000);
+        b("claimStageElement").forEach((el)=>{
+            el.style.display = "block";
+        });
+        
+        var claimFoo = document.createElement("div")
+        claimFoo.innerHTML = a("fooTile").outerHTML;
+        var claim_locLine = claimFoo.children[0].children[1].outerHTML;
+        claimFoo.children[0].children[1].remove();
+        claimFoo.children[0].children[1].remove();
+        claimFoo.children[0].children[0].innerHTML += claim_locLine;
+        a("claimed_fooTileWrapper").appendChild(claimFoo);
+        claimFoo.children[0].children[1].remove();
+    });
+    
+    $("#takeBtn")[0].addEventListener("click",()=>{
+        deleteEntry();
+        setTimeout(()=>{
+            resetObjectClaimPanel();
+            exit_any();
+        },2000);
+        a("itemClaimedBanner").innerHTML = "Item Taken and Removed from Catalog";
+        a("itemClaim").style.backgroundColor = "green";
+        a("claimed_btnBar").style.display = "none";
+        var new_iframe = document.createElement("iframe");
+        document.body.appendChild(new_iframe);
+        new_iframe.style.display = "none";
+        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert_claimFulfilled?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]));
+        setTimeout(()=>{new_iframe.remove()},1000);
+    });
+    $("#nevermindBtn")[0].addEventListener("click",()=>{
+        setTimeout(()=>{resetObjectClaimPanel()},2000);
+        a("itemClaimedBanner").innerHTML = "Item Unclamied and returned to Catalog";
+        a("itemClaim").style.backgroundColor = "red";
+        a("claimed_btnBar").style.display = "none";
+        var new_iframe = document.createElement("iframe");
+        document.body.appendChild(new_iframe);
+        new_iframe.style.display = "none";
+        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert_claimAborted?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]));
+        setTimeout(()=>{new_iframe.remove()},1000);
+    });
+    
     $("#submitLocTransfereButton")[0].addEventListener("click",()=>{
         $.post("/", {command: "transfereLoc", data: $("#transBox_loc1")[0].value+">=-:-=>"+$("#transBox_loc2")[0].value});
-
-        /*document.getElementById("command_hiddenInput").value = "transfereLoc";
-        document.getElementById("data_hiddenInput").value = $("#transBox_loc1")[0].value+">=-:-=>"+$("#transBox_loc2")[0].value;
-        document.getElementById("hiddenForm").submit();*/
-
         document.getElementById("transBox_loc1").value = "";
         document.getElementById("transBox_loc2").value = "";
         document.getElementById("curtian").style.display = "none";
@@ -131,7 +166,7 @@ function startup(){
             confirmationAnimation();
         }, 10);
     });
-
+;
     if(device == "webpage"){
         document.getElementById("partView_location").onmouseenter =  function(){
             pullUpLocAni();
@@ -165,6 +200,15 @@ function startup(){
     }
     $.post("/", {command: "VAHCS_sniff", data: getCookie("userToken")});
     fetch_USERMODE(toggleUserMode);
+}
+
+function resetObjectClaimPanel(){
+    a("itemClaim").style.backgroundColor = "white";
+    a("itemClaimedBanner").innerHTML = "Item Claimed!";
+    a("claimed_btnBar").style.display = "block";
+    a("itemClaim").style.display = "none";
+    a("curtian2").style.display = "none";
+    a("claimed_fooTileWrapper").innerHTML = "";
 }
 
 window.addEventListener('resize',()=> {
