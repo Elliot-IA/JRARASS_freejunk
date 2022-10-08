@@ -35,5 +35,9 @@
     "url": "https://github.com/Elliot-IA/JRARASS_freejunk/issues"
   },
   "homepage": "https://github.com/Elliot-IA/JRARASS_freejunk#readme",
-  "description": ""
+  "description": "",
+  "engines" : { 
+    "npm" : "7.5.2",
+    "node" : "12.22.12"
+  }
 }
