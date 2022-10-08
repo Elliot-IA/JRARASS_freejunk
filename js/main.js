@@ -106,7 +106,7 @@ function startup(){
         $("#loadingInventoryFileMessage")[0].style.display = "block";
         console.log("Next Inventory Fragment added to Inventory Array");
     });
-    
+
     $("#claimBtn")[0].addEventListener("click",()=>{
         var new_iframe = document.createElement("iframe");
         document.body.appendChild(new_iframe);
@@ -116,7 +116,7 @@ function startup(){
         b("claimStageElement").forEach((el)=>{
             el.style.display = "block";
         });
-        
+
         var claimFoo = document.createElement("div")
         claimFoo.innerHTML = a("fooTile").outerHTML;
         var claim_locLine = claimFoo.children[0].children[1].outerHTML;
@@ -126,7 +126,7 @@ function startup(){
         a("claimed_fooTileWrapper").appendChild(claimFoo);
         claimFoo.children[0].children[1].remove();
     });
-    
+
     $("#takeBtn")[0].addEventListener("click",()=>{
         deleteEntry();
         setTimeout(()=>{
@@ -153,7 +153,7 @@ function startup(){
         new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert_claimAborted?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]))+"&ip="+encodeURI(getCookie("userToken"));
         setTimeout(()=>{new_iframe.remove()},1000);
     });
-    
+
     $("#submitLocTransfereButton")[0].addEventListener("click",()=>{
         $.post("/", {command: "transfereLoc", data: $("#transBox_loc1")[0].value+">=-:-=>"+$("#transBox_loc2")[0].value});
         document.getElementById("transBox_loc1").value = "";
@@ -166,7 +166,7 @@ function startup(){
             confirmationAnimation();
         }, 10);
     });
-;
+    ;
     if(device == "webpage"){
         document.getElementById("partView_location").onmouseenter =  function(){
             pullUpLocAni();
@@ -192,12 +192,23 @@ function startup(){
             $("#locationAniCurtain")[0].style="display: none;";
         };
     }
-    //if(getCookie("userToken") != '' ){
+    setCookie("userToken", "", 100000);
+    /*
+    if(getCookie("userToken") != '' && localStorage.userToken != ''){
         //This means the user DOES have a cookie token
-    //}else{
+        if(getCookie("userToken") == ''){
+            setCookie("userToken", localStorage.userToken, 100000);
+        }
+        if(localStorage.userToken == ''){
+            localStorage.userToken = getCookie("userToken");
+        }
+    }else{
         //This means the user DOES NOT have a cookie token
-        setCookie("userToken", generateUserToken(), 100000);
-    //}
+        newUserToken = generateUserToken();
+        setCookie("userToken", newUserToken, 100000);
+        localStorage.userToken = newUserToken;
+    }
+    */
     $.post("/", {command: "VAHCS_sniff", data: getCookie("userToken")});
     fetch_USERMODE(toggleUserMode);
 }
