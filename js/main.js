@@ -192,12 +192,12 @@ function startup(){
             $("#locationAniCurtain")[0].style="display: none;";
         };
     }
-    if(getCookie("userToken") != ''){
+    //if(getCookie("userToken") != '' ){
         //This means the user DOES have a cookie token
-    }else{
+    //}else{
         //This means the user DOES NOT have a cookie token
         setCookie("userToken", generateUserToken(), 100000);
-    }
+    //}
     $.post("/", {command: "VAHCS_sniff", data: getCookie("userToken")});
     fetch_USERMODE(toggleUserMode);
 }
