@@ -134,7 +134,7 @@ function regenerateLocImgs(){
             generateImg(img.name, img.uri, "./LocationMap_Images/"+img.name);
         });
     });
-}//
+}
 async function generateImg(imgName, imgURI, imgPath){
     await imageDataURI.outputFile(imgURI, imgPath).then(res => {
         console.log("Location Img: "+imgName+" - done regenerating");
@@ -142,7 +142,7 @@ async function generateImg(imgName, imgURI, imgPath){
         if(numImgs ==  processedImgs){
             console.log("v/ Location Image Regeneration Complete!\n");
             regenerateInvFiles();
-        }
+        }//tste
     });
 }
 function regenerateInvFiles(){
