@@ -2,11 +2,13 @@ console.log("~userFunctions.js initialized!~");
 
 function generateUserToken(){
     console.log("Creating a new user token...");
-    var fullNavigatorTextSmush = navigator.appCodeName + navigator.appName + navigator.appVersion + navigator.cookieEnabled + navigator.language + navigator.onLine + navigator.platform + navigator.userAgent;
+    /*var fullNavigatorTextSmush = navigator.appCodeName + navigator.appName + navigator.appVersion + navigator.cookieEnabled + navigator.language + navigator.onLine + navigator.platform + navigator.userAgent;
     var fullNavigatorTextSmush_numbers = fullNavigatorTextSmush.match(/\d/g);
     fullNavigatorTextSmush_numbers = fullNavigatorTextSmush_numbers.join("");
     console.log("User token created: "+fullNavigatorTextSmush_numbers);
-    return fullNavigatorTextSmush_numbers;
+    return fullNavigatorTextSmush_numbers;*/
+    
+    return window.screen.width + " X " +window.screen.height + " / " +screen.colorDepth;
 }
 
 function toggleUserMode(){
