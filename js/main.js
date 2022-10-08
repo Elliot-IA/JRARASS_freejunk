@@ -111,7 +111,7 @@ function startup(){
         var new_iframe = document.createElement("iframe");
         document.body.appendChild(new_iframe);
         new_iframe.style.display = "none";
-        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]));
+        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]))+"&ip="+encodeURI(getCookie("userToken"));
         setTimeout(()=>{new_iframe.remove()},1000);
         b("claimStageElement").forEach((el)=>{
             el.style.display = "block";
@@ -139,7 +139,7 @@ function startup(){
         var new_iframe = document.createElement("iframe");
         document.body.appendChild(new_iframe);
         new_iframe.style.display = "none";
-        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert_claimFulfilled?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]));
+        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert_claimFulfilled?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]))+"&ip="+encodeURI(getCookie("userToken"));
         setTimeout(()=>{new_iframe.remove()},1000);
     });
     $("#nevermindBtn")[0].addEventListener("click",()=>{
@@ -150,7 +150,7 @@ function startup(){
         var new_iframe = document.createElement("iframe");
         document.body.appendChild(new_iframe);
         new_iframe.style.display = "none";
-        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert_claimAborted?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]));
+        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert_claimAborted?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]))+"&ip="+encodeURI(getCookie("userToken"));
         setTimeout(()=>{new_iframe.remove()},1000);
     });
     

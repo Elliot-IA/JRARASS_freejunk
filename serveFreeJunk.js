@@ -12,6 +12,7 @@ const url = require('url');
 const imageToUri = require('image-to-uri');
 const request = require("request");
 const requestIp = require('request-ip');
+var parser = require('ua-parser-js');
 
 var n = null;
 var MASTER_INVENTORY = {};
@@ -103,12 +104,13 @@ function addToken(tokenValue,tokenType, nullOrNot){
     }
 }
 
-function VAHCS_sniffer(token, source){
+function VAHCS_sniffer(userAgent, source){
     console.log("Sniff called...");
+    console.log("->User Agent: " + userAgent+"\n\n\n");
     setTimeout(()=>{
         console.log("Deploying smell...");
         //const clientIp = requestIp.getClientIp(req); 
-        var url = "https://vahcs-server.herokuapp.com/sniffTrigger?source="+source+"&ip="+token;
+        var url = "https://vahcs-server.herokuapp.com/sniffTrigger?source="+source+"&ip="+userAgent;
         console.log("Requesting url: "+url);
         request({url: url, json:true},(error,data) =>{
             console.log("Sniff request fullfilled!: "+error+ "---" +JSON.stringify(data));
@@ -132,7 +134,7 @@ function regenerateLocImgs(){
             generateImg(img.name, img.uri, "./LocationMap_Images/"+img.name);
         });
     });
-}
+}//
 async function generateImg(imgName, imgURI, imgPath){
     await imageDataURI.outputFile(imgURI, imgPath).then(res => {
         console.log("Location Img: "+imgName+" - done regenerating");
@@ -398,7 +400,8 @@ function configureRequests(){
             res.status(204).send();
         }else if(req.body.command == "VAHCS_sniff"){
             console.log("Sending sniff to VAHCS");
-            VAHCS_sniffer(req.body.data, "Free Junk Catalog Homepage");
+            var ua = JSON.stringify(parser(req.headers['user-agent']));
+            VAHCS_sniffer(ua, "Free Junk Catalog Homepage");
             res.status(204).send();
         }else{
             console.log("(!)A post request was made from Astradux.html, but the command was not recognized. Command: "+ req.body.command+" Data: "+ req.body.data);
@@ -470,7 +473,8 @@ function configureRequests(){
             res.status(204).send();
         }else if(req.body.command == "VAHCS_sniff"){
             console.log("Sending sniff to VAHCS");
-            VAHCS_sniffer(req.body.data, "Free Junk Catalog Add Part");
+            var ua = JSON.stringify(parser(req.headers['user-agent']));
+            VAHCS_sniffer(ua, "Free Junk Catalog Add Part");
             res.status(204).send();
         }else{
             console.log("(!)A post request was made from addPart.html, but the command was not recognized. Command: "+ req.body.command+" Data: "+ req.body.data);
@@ -493,7 +497,8 @@ function configureRequests(){
             res.sendFile(__dirname+"/Astradux.html");
         }else if(req.body.command == "VAHCS_sniff"){
             console.log("Sending sniff to VAHCS");
-            VAHCS_sniffer(req.body.data, "Free Junk Catalog Catalog Catagory Map");
+            var ua = JSON.stringify(parser(req.headers['user-agent']));
+            VAHCS_sniffer(ua, "Free Junk Catalog Catalog Catagory Map");
             res.status(204).send();
         }else{
             console.log("(!)A post request was made from catagoryMap.html, but the command was not recognized. Command: "+ req.body.command+" Data: "+ req.body.data);
