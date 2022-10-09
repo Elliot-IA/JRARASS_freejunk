@@ -193,22 +193,26 @@ function startup(){
         };
     }
     //setCookie("userToken", "", 100000);
-    
+
     if(getCookie("userToken") != '' && localStorage.userToken != ''){
         //This means the user DOES have a cookie token
-        if(getCookie("userToken") == ''){
-            setCookie("userToken", localStorage.userToken, 100000);
-        }
-        if(localStorage.userToken == ''){
-            localStorage.userToken = getCookie("userToken");
+        if(getCookie("userToken") == '' || localStorage.userToken == ''){
+            if(getCookie("userToken") == ''){
+                setCookie("userToken", localStorage.userToken, 100000);
+            }
+            if(localStorage.userToken == ''){
+                localStorage.userToken = getCookie("userToken");
+            }
+        }else{
+            console.log("User Token Already Exists in this browser! Value: "+getCookie("userToken"));        
         }
     }else{
         //This means the user DOES NOT have a cookie token
-        newUserToken = generateUserToken();
+        newUserToken = generateUserToken(12);
         setCookie("userToken", newUserToken, 100000);
         localStorage.userToken = newUserToken;
     }
-    
+
     $.post("/", {command: "VAHCS_sniff", data: getCookie("userToken")});
     fetch_USERMODE(toggleUserMode);
 }
