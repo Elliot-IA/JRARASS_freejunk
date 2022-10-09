@@ -60,7 +60,7 @@ var userMode = "user";
 function fetch_USERMODE(callback){
     console.log("Fetching USERMODE...");
     fetch('/getUSERMODE?token='+getCookie("userToken"))
-        .then(response => response.json())
+//        .then(response => response.json())
         .then(data => {
         console.log("USERMODE fetched: "+ data);
         userMode = data;
