@@ -105,6 +105,7 @@ function addToken(tokenValue,tokenType, nullOrNot){
 
 function VAHCS_sniffer(token, source){
     console.log("Sniff called...");
+    console.log(token);
     setTimeout(()=>{
         console.log("Deploying smell...");
         //const clientIp = requestIp.getClientIp(req); 
