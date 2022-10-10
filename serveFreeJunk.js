@@ -169,8 +169,11 @@ function regenerateInvFiles(){
         console.log("result: "+JSON.stringify(MASTER_INVENTORY).substring(0,30));
     });
 }
+var nullTokens = [];
+var userToken = [];
+var adminToken = [];
 function pullTokens(){
-    astrasystem_client.db("Universals").collection("GLOBALS").find({"name": "accessTokens"}).toArray((error, tokenData)=>{
+    astrasystem_client.db("Universals").collection("accessTokens").find({}).toArray((error, tokenData)=>{
         var numTokens = tokenData.length;
         console.log("Pulling tokens into global token arrays...");
         var storedTokens = 0;
