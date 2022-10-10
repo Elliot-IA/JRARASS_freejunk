@@ -6,7 +6,7 @@
 //      >Manipulating part data from partView
 //      >a to addPart
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-console.log("main.js File Initated");
+console.log("JRARASS main.js File Initated");
 
 var Inventory = [];
 
@@ -34,7 +34,13 @@ window.onload = function(){
     fetch_CATAGORIES(fetch2Wrap);
 }
 function startup(){
-    createAndShuffle_CycleOrder();
+    createAndShuffle_CycleOrder();if(window.location.href.indexOf("search")!=-1){
+        if(getCookie("SEARCHQUERY") != ""){
+            alert("Uh oh, conflicting search cookies! URL Search cookie takes presidence, press okay to contiue...");
+        }
+        setCookie("SEARCHQUERY",decodeURI(window.location.href.substring(window.location.href.indexOf("search=")+7)),100000);
+    }
+
     if(getCookie("SEARCHQUERY") != ""/*document.querySelector("meta[name=queryDATA]").getAttribute("content") != "[\"\",\"\"]"*/){
         console.log("Running forign search...");
         var forignQuery = eval(getCookie("SEARCHQUERY"));//eval(eval(document.querySelector("meta[name=queryDATA]").getAttribute("content")));
@@ -46,6 +52,10 @@ function startup(){
         }else if(forignQuery[1] == "catagory"){
             setTimeout(()=>{
                 catSearch();
+            }, forignSearchDelay);
+        }else if(forignQuery[1] == "location"){
+            setTimeout(()=>{
+                locSearch();
             }, forignSearchDelay);
         }else{
             alert("main.js found non-null queryDATA with an unrecognized search type");
@@ -192,19 +202,20 @@ function startup(){
             $("#locationAniCurtain")[0].style="display: none;";
         };
     }
-    //setCookie("userToken", "", 100000);
 
-    if(getCookie("userToken") != '' && localStorage.userToken != ''){
+    console.log("Looking for userToken in cookies and local storage...");
+    if(getCookie("userToken") != '' || localStorage.userToken != undefined){
         //This means the user DOES have a cookie token
-        if(getCookie("userToken") == '' || localStorage.userToken == ''){
+        if(getCookie("userToken") == '' || localStorage.userToken == undefined){
             if(getCookie("userToken") == ''){
                 setCookie("userToken", localStorage.userToken, 100000);
-            }
-            if(localStorage.userToken == ''){
+                console.log("User Token Already Exists in this browser! Value: "+getCookie("userToken")+" -- token value was already present in local storage but was missing in cookies. Cookie must have been cleared by the browser! userToken cookie reset to copy of value in local storage v/");
+            }else if(localStorage.userToken == undefined){
                 localStorage.userToken = getCookie("userToken");
+                console.log("User Token Already Exists in this browser! Value: "+getCookie("userToken")+" -- token value was already present as cookie but was missing in local storage. Local Storage field must have been erased by the browser! Local Storage field reset to copy of value in cookies v/");
             }
         }else{
-            console.log("User Token Already Exists in this browser! Value: "+getCookie("userToken"));        
+            console.log("User Token Already Exists in this browser! Value: "+getCookie("userToken")+" -- matching token values were already present in both cookies and local storage");
         }
     }else{
         //This means the user DOES NOT have a cookie token
@@ -434,6 +445,12 @@ function determineCarousel(){
     }else if(catLeaf_Indexes.indexOf(eval(inventoryLoc)) != -1){
         partCarousel = "catLeaf_Indexes";
         partCarouselPosition = catLeaf_Indexes.indexOf(eval(inventoryLoc));
+    }else if(loc_Indexes.indexOf(eval(inventoryLoc)) != -1){
+        partCarousel = "loc_Indexes";
+        partCarouselPosition = loc_Indexes.indexOf(eval(inventoryLoc));
+    }else if(subLoc_Indexes.indexOf(eval(inventoryLoc)) != -1){
+        partCarousel = "subLoc_Indexes";
+        partCarouselPosition = subLoc_Indexes.indexOf(eval(inventoryLoc));
     }else{
         console.log("Uh-oh, couldn't determine which result array to assign the carousel");
     }
@@ -936,6 +953,10 @@ function prepareScreenForResults(level){
         sideBarInfoText.innerHTML = "Within the search results, these are the most common catagory assignments. May be good places to continue your search";
     }else if(level == "CatagoryLeaves"){
         sideBarInfoText.innerHTML = "These are parts that have been assigned to a leaf catagory of the selected catagory branch";
+    }else if(level == "Location"){
+        sideBarInfoText.innerHTML = "These are parts that exist within the searched location";
+    }else if(level == "SubLocation"){
+        sideBarInfoText.innerHTML = "These are parts that exist within a sublocation of the searched location";
     }
 
     var sideBarText = document.createElement("div");
@@ -953,6 +974,10 @@ function prepareScreenForResults(level){
         sideBarText.innerHTML += "Where to look next..."
     }else if(level == "CatagoryLeaves"){
         sideBarText.innerHTML += "Included in Catagory Leaf..."
+    }else if(level == "Location"){
+        sideBarText.innerHTML += "Stored at Location..."
+    }else if(level == "SubLocation"){
+        sideBarText.innerHTML += "Stored in Sublocation..."
     }
 
     var new_tilesHolder_GridWrap = document.createElement("div");
@@ -1270,6 +1295,36 @@ function searchCatLayer(layer, target){
     }
 }
 
+var locationExists = false;
+var locationIndexStr = "";
+function searchLocLayer(layer, target){
+    locationExists = false;
+    breakAllLoopLayers_loc = false;
+    locationIndex = "";
+    Loop:{
+        for(var i = 0; i < eval(layer).length; i++){
+            if(breakAllLoopLayers_loc){
+                break Loop;
+            }
+            var layerObject = layer+"["+i+"]";
+            console.log("LayerObject is: "+layer+"["+i+"]");
+            console.log("Layer Location Name: "+eval(layerObject)[0]);
+            if(eval(layerObject)[0].toLowerCase() == target.toLowerCase()){
+                console.log("found the location!");
+                locationExists = true;
+                breakAllLoopLayers_loc = true;
+                locationIndexStr = layerObject;
+                return true;
+                break Loop;
+            }
+            if(eval(layerObject).length != 4){
+                var newLayer = layerObject+"[4]";
+                searchLocLayer(newLayer, target);
+            }
+        }
+    }
+}
+
 var numberofCatagoryHits = 0;
 var numberofCatagoryLeavesHits = 0;
 function conduct_catagorySearch(catagory, type, currentCatIndexStr){   //type specifies whether the search applies to the branch catagory or one of its leaves
@@ -1302,6 +1357,39 @@ function conduct_catagorySearch(catagory, type, currentCatIndexStr){   //type sp
     }
 }
 
+
+var numberofLocationHits = 0;
+var numberofSubLocationHits = 0;
+function conduct_locationSearch(location, type, currentLocIndexStr){   //type specifies whether the search applies to the branch catagory or one of its leaves
+    for(var i = 0; i<inventoryFragment.length; i++){ //Tests each element in inventoryFragment[] for a match
+        if(location.toLowerCase() == (inventoryFragment[i][0][0][1]).toLowerCase()){
+            console.log("Match!");
+            Inventory.push(inventoryFragment[i]);
+            document.getElementById("search_tilesHolder"+type).insertBefore(createTile(Inventory.length-1, null), document.getElementById("seaching_StyleTile_wrap"+type));
+            result_fragIndexes.push(i);
+            if(type == "Location"){
+                numberofLocationHits++;
+                loc_Indexes.push(Inventory.length-1);
+            }else if(type == "SubLocations"){
+                numberofSubLocationHits++;
+                subLoc_Indexes.push(Inventory.length-1);
+            }
+        }
+        document.getElementById("search_countContainer"+type).innerHTML = (i+1)+"/"+inventoryFragment.length;
+    }
+    if(type == "Location"){
+        console.log(">>>>>Location Search Complete, query had "+numberofLocationHits+" Matches (s)<<<<<");
+    }else if(type == "SubLocations"){
+        console.log(">>>>>Catagory Leaf Search Complete, query had "+numberofSubLocationHits+" Matches (s)<<<<<");
+    }
+    if(eval(currentLocIndexStr).length == 2){   //Recursive Leaf Search
+        for(var i = 0; i<eval(currentLocIndexStr)[1].length; i++){
+            var curentLocObject = eval(currentLocIndexStr)[1][i];
+            conduct_catalogySearch(eval(curentLocObject)[0], "SubLocations", curentLocObject);
+        }
+    }
+}
+
 function generalSearchProcedures(){
     /*imgController.abort(); // aborting request
     console.log('all img requests aborted');*/
@@ -1314,6 +1402,7 @@ function generalSearchProcedures(){
         try{document.getElementById("resultWrap2").remove();}catch{}
         try{document.getElementById("resultWrap3").remove();}catch{}
         try{document.getElementById("resultWrapCatagory").remove();}catch{}
+        try{document.getElementById("resultWrapLocation").remove();}catch{}
         try{document.getElementById("resultWraplookNext").remove();}catch{}
         $("#noResultsBanner")[0].style.display = "none";
     }else{
@@ -1332,6 +1421,8 @@ function generalSearchProcedures(){
     related_Indexes = [];
     cat_Indexes = [];
     catLeaf_Indexes = [];
+    loc_Indexes = [];
+    subLoc_Indexes = [];
     INVENTORYFiles_CyclesRun = 0;
     createAndShuffle_CycleOrder();
     document.getElementById("homeBlocker_meta").setAttribute('content', 'off');
@@ -1412,6 +1503,41 @@ function catSearch(){
     }
 }
 
+function locSearch(){
+    console.log("Location type search triggered from url, or ; running search...");
+    searchTerm = document.getElementById("inquiry").value.toLowerCase(); //window.location.href.substring(window.location.href.indexOf("searchTerm")+10+1)
+    console.log("Seach query recorded: " + searchTerm);
+    if(searchTerm == locations[0]){
+        locationExists = true;
+        locationIndexStr = "locations";
+    }else{
+        searchLocLayer("locations[4]", searchTerm);
+    }
+    if(!locationExists){
+        alert("Whoops! It looks like that catagory doesn't esist in the locations array!");
+    }else{
+        generalSearchProcedures();
+        showingSearchResults = true;
+        if(searchTerm == ""){
+            console.log("Wait a minuite, that search term is invalid! Cannot execute search");
+        }else{
+            result_fragIndexes = [];
+            prepareScreenForResults("Location"); //Prepare Screen for Matches
+            createSearchingTile(document.getElementById("search_tilesHolder"+"Location"), "Location");
+            if(eval(locationIndexStr).length == 5){
+                console.log("The location the user searched for has sub-locations! Ajusting the DOM accordingly...");
+                prepareScreenForResults("subLocations");
+                createSearchingTile(document.getElementById("search_tilesHolder"+"subLocations"), "subLocations");
+            }
+            numberofLocationHits = 0;
+            numberofSubLocationHits = 0;
+            // ---------------------------------------------------------------------------------------
+            search_recursiveDriver("loc");
+            // ---------------------------------------------------------------------------------------
+        }
+    }
+}
+
 var searchCycleInterum = 0;
 function search_recursiveDriver(typeOfSearch){   //The recursive function that handles pulling data from the inventory files
     if(INVENTORYFiles_CyclesRun == INVENTORYFiles_Count){   //If all Inventory Files have been searched through
@@ -1445,6 +1571,17 @@ function search_recursiveDriver(typeOfSearch){   //The recursive function that h
                 console.log("There were no CatagoryLeaves hits, removing the CatagoryLeaves resultsWrap");
                 try{document.getElementById("resultWrapCatagoryLeaves").remove()}catch{};
             }
+        }else if(typeOfSearch == "loc"){
+            document.getElementById("seaching_StyleTile_wrapLocation").remove();
+            try{document.getElementById("seaching_StyleTile_wrapSubLocation").remove();}catch{}
+            if(numberofLocationHits == 0){
+                console.log("There were no Catagory hits, removing the Location resultsWrap");
+                document.getElementById("resultWrapLocation").remove();
+            }
+            if(numberofSubLocationHits == 0){
+                console.log("There were no SubLocation hits, removing the SubLocations resultsWrap");
+                try{document.getElementById("resultWrapSubLocations").remove()}catch{};
+            }
         }
         document.getElementById("spaceToGoHomeMessage").style.display = "block";
         document.getElementById("hiddenBtn").focus();
@@ -1473,6 +1610,12 @@ function search_recursiveDriver(typeOfSearch){   //The recursive function that h
                 conduct_catagorySearch(searchTerm, "Catagory", catagoryIndexStr);
                 setTimeout(()=>{
                     search_recursiveDriver("cat");
+                }, searchCycleInterum);
+            }else if(typeOfSearch == "loc"){
+                console.log("Running a location search on Inventory fragment from: INVENTORY"+INVENTORYFiles_CycleOrder[INVENTORYFiles_CyclesRun]+"...");
+                conduct_locationSearch(searchTerm, "Location", locationIndexStr);
+                setTimeout(()=>{
+                    search_recursiveDriver("loc");
                 }, searchCycleInterum);
             }else{
                 console.log("(!)The search_recursiveDriver() function was called but with an unknown search type parameter");

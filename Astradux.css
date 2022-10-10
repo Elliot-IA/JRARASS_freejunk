@@ -1442,7 +1442,7 @@ button{
 #EB_cancelButton{}
 
 /*---- Searching ----*/
-#resultWrap1, #resultWrap2, #resultWrap3, #resultWrapCatagory, #resultWraplookNext{
+#resultWrap1, #resultWrap2, #resultWrap3, #resultWrapCatagory, #resultWrapCatagoryLeaves,#resultWrapLocation,#resultWrapSubLocations, #resultWraplookNext{
     display: block;
     margin-bottom: 10px;
 }
@@ -1462,12 +1462,12 @@ button{
     font-family: Jura;
     margin-left: 10px;
 }
-#search_sideBar_infoIcon1, #search_sideBar_infoIcon2, #search_sideBar_infoIcon3, #search_sideBar_infoIconCatagory, #search_sideBar_infoIconlookNext, #search_sideBar_infoIconCatagoryLeaves{
+#search_sideBar_infoIcon1, #search_sideBar_infoIcon2, #search_sideBar_infoIcon3, #search_sideBar_infoIconCatagory, #search_sideBar_infoIconlookNext, #search_sideBar_infoIconCatagoryLeaves, #search_sideBar_infoIconLocation, #search_sideBar_infoIconSubLocation{
     height: 11px;
     margin-right: 4px;
     display: inline;
 }
-#search_sideBar_infoIcon1:hover, #search_sideBar_infoIcon2:hover, #search_sideBar_infoIcon3:hover, #search_sideBar_infoIconCatagory:hover, #search_sideBar_infoIconlookNext:hover, #search_sideBar_infoIconcatagoryLeaves:hover{
+#search_sideBar_infoIcon1:hover, #search_sideBar_infoIcon2:hover, #search_sideBar_infoIcon3:hover, #search_sideBar_infoIconCatagory:hover, #search_sideBar_infoIconlookNext:hover, #search_sideBar_infoIconcatagoryLeaves:hover, #search_sideBar_infoIconLocation:hover, #search_sideBar_infoIconSubLocation:hover{
     cursor: help;
 }
 #search_sideBar_Text{
@@ -1475,7 +1475,7 @@ button{
     position: relative;
     margin-right: 4px;
 }
-#search_tilesHolder1_GridWrap, #search_tilesHolder2_GridWrap, #search_tilesHolder3_GridWrap, #search_tilesHolderCatagory_GridWrap, #search_tilesHolderCatagoryLeaves_GridWrap{
+#search_tilesHolder1_GridWrap, #search_tilesHolder2_GridWrap, #search_tilesHolder3_GridWrap, #search_tilesHolderCatagory_GridWrap, #search_tilesHolderCatagoryLeaves_GridWrap, #search_tilesHolderLocation_GridWrap, #search_tilesHolderSubLocation_GridWrap{
     display: inline-grid;
     position: relative;
 }
@@ -1484,7 +1484,7 @@ button{
     display: inline-grid;
     position: relative;
 }
-#search_tilesHolder1, #search_tilesHolder2, #search_tilesHolder3, #search_tilesHolderCatagory, #search_tilesHolderlookNext, #search_tilesHolderCatagoryLeaves{
+#search_tilesHolder1, #search_tilesHolder2, #search_tilesHolder3, #search_tilesHolderCatagory, #search_tilesHolderlookNext, #search_tilesHolderCatagoryLeaves, #search_tilesHolderLocation, #search_tilesHolderSubLocations{
     border-bottom: 2px solid grey;
     display: inline-block;
     position: static;
@@ -1492,13 +1492,13 @@ button{
 #search_tilesHolderlookNext{
     padding-bottom: 8px;
 }
-#seaching_StyleTile_wrap1, #seaching_StyleTile_wrap2, #seaching_StyleTile_wrap3, #seaching_StyleTile_wrapCatagory, #seaching_StyleTile_wraplookNext, #seaching_StyleTile_wrapCatagoryLeaves{
+#seaching_StyleTile_wrap1, #seaching_StyleTile_wrap2, #seaching_StyleTile_wrap3, #seaching_StyleTile_wrapCatagory, #seaching_StyleTile_wraplookNext, #seaching_StyleTile_wrapCatagoryLeaves, #seaching_StyleTile_wrapLocation, #seaching_StyleTile_wrapSubLocation{
     display: inline-block;
 }
 .seaching_StyleTile{
     display: inline-grid;
 }
-#search_sideBar_infoText1, #search_sideBar_infoText2, #search_sideBar_infoText3, #search_sideBar_infoTextCatagory, #search_sideBar_infoTextlookNext, #search_sideBar_infoTextCatagoryLeaves{
+#search_sideBar_infoText1, #search_sideBar_infoText2, #search_sideBar_infoText3, #search_sideBar_infoTextCatagory, #search_sideBar_infoTextlookNext, #search_sideBar_infoTextCatagoryLeaves, #search_sideBar_infoTextLocation, #search_sideBar_infoTextSubLocation{
     display: none;
     font-family: Monospace;
     font-size: 12px;
@@ -1516,7 +1516,7 @@ button{
     font-style: italic;
     margin-top: 5px;
 }
-#search_sideBar_infoText1::after, #search_sideBar_infoText2::after, #search_sideBar_infoText3::after, #search_sideBar_infoTextlookNext::after, #search_sideBar_infoTextCatagoryLeaves::after{
+#search_sideBar_infoText1::after, #search_sideBar_infoText2::after, #search_sideBar_infoText3::after, #search_sideBar_infoTextlookNext::after, #search_sideBar_infoTextCatagoryLeaves::after, #search_sideBar_infoTextSubLocations::after{
     content: " ";
     position: fixed;
     left: 13.5px;
@@ -1528,6 +1528,17 @@ button{
     transform: rotate(180deg);
 }
 #search_sideBar_infoTextCatagory::after{
+    content: " ";
+    position: fixed;
+    left: 13.5px;
+    margin-left: 4px;
+    margin-top: -20px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+    transform: rotate(180deg);
+}
+#search_sideBar_infoTextLocation::after{
     content: " ";
     position: fixed;
     left: 13.5px;
@@ -1555,6 +1566,9 @@ button{
     display: block;
 }
 #search_sideBar_infoIconCatagoryLeaves:hover #search_sideBar_infoTextCatagoryLeaves{
+    display: block;
+}
+#search_sideBar_infoIconLocation:hover #search_sideBar_infoTextSubLocation{
     display: block;
 }
 .search_sideBar_infoText{
