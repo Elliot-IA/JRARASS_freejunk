@@ -1462,12 +1462,12 @@ button{
     font-family: Jura;
     margin-left: 10px;
 }
-#search_sideBar_infoIcon1, #search_sideBar_infoIcon2, #search_sideBar_infoIcon3, #search_sideBar_infoIconCatagory, #search_sideBar_infoIconlookNext, #search_sideBar_infoIconCatagoryLeaves, #search_sideBar_infoIconLocation, #search_sideBar_infoIconSubLocation{
+#search_sideBar_infoIcon1, #search_sideBar_infoIcon2, #search_sideBar_infoIcon3, #search_sideBar_infoIconCatagory, #search_sideBar_infoIconlookNext, #search_sideBar_infoIconCatagoryLeaves, #search_sideBar_infoIconLocation, #search_sideBar_infoIconSubLocations{
     height: 11px;
     margin-right: 4px;
     display: inline;
 }
-#search_sideBar_infoIcon1:hover, #search_sideBar_infoIcon2:hover, #search_sideBar_infoIcon3:hover, #search_sideBar_infoIconCatagory:hover, #search_sideBar_infoIconlookNext:hover, #search_sideBar_infoIconcatagoryLeaves:hover, #search_sideBar_infoIconLocation:hover, #search_sideBar_infoIconSubLocation:hover{
+#search_sideBar_infoIcon1:hover, #search_sideBar_infoIcon2:hover, #search_sideBar_infoIcon3:hover, #search_sideBar_infoIconCatagory:hover, #search_sideBar_infoIconlookNext:hover, #search_sideBar_infoIconcatagoryLeaves:hover, #search_sideBar_infoIconLocation:hover, #search_sideBar_infoIconSubLocations:hover{
     cursor: help;
 }
 #search_sideBar_Text{

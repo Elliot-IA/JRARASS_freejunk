@@ -1,5 +1,6 @@
 var showingSearchResults = false;
 var device = "webpage";
+var claimedItem = "";
 
 function addEl(type, id, className, appendSelector){
     var el= document.createElement(type);

@@ -34,7 +34,8 @@ window.onload = function(){
     fetch_CATAGORIES(fetch2Wrap);
 }
 function startup(){
-    createAndShuffle_CycleOrder();if(window.location.href.indexOf("search")!=-1){
+    createAndShuffle_CycleOrder();
+    if(window.location.href.indexOf("search")!=-1){
         if(getCookie("SEARCHQUERY") != ""){
             alert("Uh oh, conflicting search cookies! URL Search cookie takes presidence, press okay to contiue...");
         }
@@ -121,6 +122,7 @@ function startup(){
         var new_iframe = document.createElement("iframe");
         document.body.appendChild(new_iframe);
         new_iframe.style.display = "none";
+        claimedItem = Inventory[inventoryLoc];
         new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]))+"&ip="+encodeURI(getCookie("userToken"));
         setTimeout(()=>{new_iframe.remove()},1000);
         b("claimStageElement").forEach((el)=>{
@@ -149,8 +151,9 @@ function startup(){
         var new_iframe = document.createElement("iframe");
         document.body.appendChild(new_iframe);
         new_iframe.style.display = "none";
-        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert_claimFulfilled?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]))+"&ip="+encodeURI(getCookie("userToken"));
+        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert_claimFulfilled?partData="+encodeURI(JSON.stringify(claimedItem))+"&ip="+encodeURI(getCookie("userToken"));
         setTimeout(()=>{new_iframe.remove()},1000);
+        claimedItem = "";
     });
     $("#nevermindBtn")[0].addEventListener("click",()=>{
         setTimeout(()=>{resetObjectClaimPanel()},2000);
@@ -160,8 +163,9 @@ function startup(){
         var new_iframe = document.createElement("iframe");
         document.body.appendChild(new_iframe);
         new_iframe.style.display = "none";
-        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert_claimAborted?partData="+encodeURI(JSON.stringify(Inventory[inventoryLoc]))+"&ip="+encodeURI(getCookie("userToken"));
+        new_iframe.src="https://vahcs-server.herokuapp.com/JRARASS_claimAlert_claimAborted?partData="+encodeURI(JSON.stringify(claimedItem))+"&ip="+encodeURI(getCookie("userToken"));
         setTimeout(()=>{new_iframe.remove()},1000);
+        claimedItem = "";
     });
 
     $("#submitLocTransfereButton")[0].addEventListener("click",()=>{
@@ -176,7 +180,6 @@ function startup(){
             confirmationAnimation();
         }, 10);
     });
-    ;
     if(device == "webpage"){
         document.getElementById("partView_location").onmouseenter =  function(){
             pullUpLocAni();
@@ -1351,18 +1354,21 @@ function conduct_catagorySearch(catagory, type, currentCatIndexStr){   //type sp
     }
     if(eval(currentCatIndexStr).length == 2){   //Recursive Leaf Search
         for(var i = 0; i<eval(currentCatIndexStr)[1].length; i++){
-            var curentLocObject = eval(currentCatIndexStr)[1][i];
-            conduct_catagorySearch(eval(curentLocObject)[0], "CatagoryLeaves", curentLocObject);
+            var curentLocObject = eval(currentCatIndexStr)[5][i];
+            try{
+                conduct_catagorySearch(eval(curentLocObject)[0], "CatagoryLeaves", curentLocObject);
+            }catch{
+                debugger;
+            }
         }
     }
 }
-
 
 var numberofLocationHits = 0;
 var numberofSubLocationHits = 0;
 function conduct_locationSearch(location, type, currentLocIndexStr){   //type specifies whether the search applies to the branch catagory or one of its leaves
     for(var i = 0; i<inventoryFragment.length; i++){ //Tests each element in inventoryFragment[] for a match
-        if(location.toLowerCase() == (inventoryFragment[i][0][0][1]).toLowerCase()){
+        if(location.toLowerCase() == (inventoryFragment[i][0][0][1].toLowerCase().substring(0,((inventoryFragment[i][0][0][1]).indexOf(":") != -1 && location.indexOf(":") == -1)? inventoryFragment[i][0][0][1].indexOf(":") : inventoryFragment[i][0][0][1].length))){
             console.log("Match!");
             Inventory.push(inventoryFragment[i]);
             document.getElementById("search_tilesHolder"+type).insertBefore(createTile(Inventory.length-1, null), document.getElementById("seaching_StyleTile_wrap"+type));
@@ -1382,10 +1388,15 @@ function conduct_locationSearch(location, type, currentLocIndexStr){   //type sp
     }else if(type == "SubLocations"){
         console.log(">>>>>Catagory Leaf Search Complete, query had "+numberofSubLocationHits+" Matches (s)<<<<<");
     }
-    if(eval(currentLocIndexStr).length == 2){   //Recursive Leaf Search
-        for(var i = 0; i<eval(currentLocIndexStr)[1].length; i++){
-            var curentLocObject = eval(currentLocIndexStr)[1][i];
-            conduct_catalogySearch(eval(curentLocObject)[0], "SubLocations", curentLocObject);
+    //debugger;
+    if(eval(currentLocIndexStr).length == 5){   //Recursive Leaf Search
+        for(var i = 0; i<eval(currentLocIndexStr)[4].length; i++){
+            var curentLocObject = eval(currentLocIndexStr)[4][i];
+            try{
+                conduct_locationSearch(eval(curentLocObject)[0], "SubLocations", curentLocObject);
+            }catch{
+                debugger;
+            }
         }
     }
 }
@@ -1459,6 +1470,14 @@ function fullSearch(){
                     break searchTermTesting;
                 }
             }
+            searchLocLayer("locations[4]", (searchTerm.indexOf(":") != -1) ? searchTerm.substring(0,searchTerm.indexOf(":")) : searchTerm);   //Check, "does this search term match any catagories in the catagory list?"
+            if(locationExists){
+                var runLocSearchInstead = confirm("The search term you entered matches the location: "+eval(locationIndexStr)[0]+", would you like to run a location search instead?");
+                if(runLocSearchInstead){
+                    locSearch();
+                    break searchTermTesting;
+                }
+            }
             prepareScreenForResults(1); //Prepare Screen for Matches
             createSearchingTile(document.getElementById("search_tilesHolder1"), 1);
             prepareScreenForResults(2);     //Prepare Screen for Hits
@@ -1511,7 +1530,7 @@ function locSearch(){
         locationExists = true;
         locationIndexStr = "locations";
     }else{
-        searchLocLayer("locations[4]", searchTerm);
+        searchLocLayer("locations[4]", (searchTerm.indexOf(":") != -1) ? searchTerm.substring(0,searchTerm.indexOf(":")) : searchTerm ); //here
     }
     if(!locationExists){
         alert("Whoops! It looks like that catagory doesn't esist in the locations array!");
@@ -1526,8 +1545,8 @@ function locSearch(){
             createSearchingTile(document.getElementById("search_tilesHolder"+"Location"), "Location");
             if(eval(locationIndexStr).length == 5){
                 console.log("The location the user searched for has sub-locations! Ajusting the DOM accordingly...");
-                prepareScreenForResults("subLocations");
-                createSearchingTile(document.getElementById("search_tilesHolder"+"subLocations"), "subLocations");
+                prepareScreenForResults("SubLocations");
+                createSearchingTile(document.getElementById("search_tilesHolder"+"SubLocations"), "SubLocations");
             }
             numberofLocationHits = 0;
             numberofSubLocationHits = 0;
@@ -1573,7 +1592,7 @@ function search_recursiveDriver(typeOfSearch){   //The recursive function that h
             }
         }else if(typeOfSearch == "loc"){
             document.getElementById("seaching_StyleTile_wrapLocation").remove();
-            try{document.getElementById("seaching_StyleTile_wrapSubLocation").remove();}catch{}
+            try{document.getElementById("seaching_StyleTile_wrapSubLocations").remove();}catch{}
             if(numberofLocationHits == 0){
                 console.log("There were no Catagory hits, removing the Location resultsWrap");
                 document.getElementById("resultWrapLocation").remove();
@@ -1597,7 +1616,7 @@ function search_recursiveDriver(typeOfSearch){   //The recursive function that h
                 inventoryFragment.push([[element], "INVENTORY"+INVENTORYFiles_CycleOrder[INVENTORYFiles_CyclesRun]]);
             });
             document.querySelectorAll(".search_fileCountContainer").forEach((item)=>{
-                item.innerHTML = INVENTORYFiles_CyclesRun+"/"+INVENTORYFiles_Count;
+                item.innerHTML = (INVENTORYFiles_CyclesRun+1)+"/"+INVENTORYFiles_Count;
             });
             if(typeOfSearch == "full"){
                 console.log("Running a full search on Inventory fragment from: INVENTORY"+INVENTORYFiles_CycleOrder[INVENTORYFiles_CyclesRun]+"...");
