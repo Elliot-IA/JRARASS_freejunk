@@ -1354,7 +1354,7 @@ function conduct_catagorySearch(catagory, type, currentCatIndexStr){   //type sp
     }
     if(eval(currentCatIndexStr).length == 2){   //Recursive Leaf Search
         for(var i = 0; i<eval(currentCatIndexStr)[1].length; i++){
-            var curentLocObject = eval(currentCatIndexStr)[5][i];
+            var curentLocObject = eval(currentCatIndexStr)[1][i];
             try{
                 conduct_catagorySearch(eval(curentLocObject)[0], "CatagoryLeaves", curentLocObject);
             }catch{
