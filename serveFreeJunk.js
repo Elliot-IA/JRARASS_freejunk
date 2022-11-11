@@ -12,6 +12,7 @@ const url = require('url');
 const imageToUri = require('image-to-uri');
 const request = require("request");
 const requestIp = require('request-ip');
+const QRCode = require('qrcode')
 
 var n = null;
 var MASTER_INVENTORY = {};
@@ -180,7 +181,7 @@ function pullTokens(){
         if(numTokens != 0){
             tokenData.forEach((token)=>{
                 console.log("Sorting token: "+JSON.stringify(token)+"...");
-                
+
                 if(token.null){
                     nullTokens.push(token.value);
                 }
@@ -189,7 +190,7 @@ function pullTokens(){
                 }else if(token.dataType == "adminToken"){
                     adminToken.push(token.value);
                 }
-                
+
                 storedTokens++;
                 if(numTokens ==  storedTokens){
                     console.log("v/ All tokens sorted and stored!\n");
@@ -326,7 +327,7 @@ function configureStandby(){
             res.json("user");
             addToken(queryObject.token, "user", false);
         }
-        
+
         res.send(userType)
     });
     app.get("/getn", function(req, res){
@@ -352,6 +353,22 @@ function configureStandby(){
             }
         });
     });
+    app.get("/generateBoxQRs", function(req, res){
+        var queryObject = url.parse(req.url,true).query;
+        console.log(">>>Generate Box QRs Fetch Request: query object: "+JSON.stringify(queryObject)+" <<->> num codes: "+queryObject.n);
+        var numCodes = queryObject.n;
+        
+        generateNewLocationQRs(numCodes,res);        
+    });
+    
+    app.get("/hyperlogger", function(req, res){
+        console.log("You tried to go to the hyperlogger!");
+        res.sendFile(__dirname+"/subprograms/hyperlogger/hyperloggerRedirection.html");
+    });
+    app.get("/qrgen", function(req, res){
+        res.sendFile(__dirname+"/subprograms/qrCodeGenerator/QRCodeGeneratorRedirection.html");
+    });
+    
     app.get("*", function(req, res){
         if(regenerationInProgress){
             res.send("!Please stand by, astrasystem file structure regenerating...");
@@ -504,7 +521,7 @@ function configureRequests(){
             res.send("(!)A post request was made from catagoryMap.html, but the command was not recognized. Command: "+ req.body.command+" Data: "+ req.body.data);
         }
     });
-
+    
     regenerationInProgress = false;
     preRegeneration = false;
     console.log("</> CONFIGURATION COMPLETE, ASTRADUX ONLINE </>\n");
@@ -778,7 +795,6 @@ function closeProgram(){
 
 
 ////////////////////////////////////INSTAPULL//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 const archiver = require('archiver');
 const fse = require('fs-extra');
 
@@ -872,6 +888,42 @@ function rand(min,max){
     return parseInt(Math.random()*((max+1)-min)+min);
 }
 
+
+////////////////////////////////////BOX QR Generation//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const characters ='0123456789';
+function generateLocationStr(){
+    console.log("Creating a new user token...");
+    let result = ' ';
+    const charactersLength = characters.length;
+    for ( let i = 0; i < 8; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    console.log("New Location Str: "+ result);
+    return result;
+}
+
+var iteration = 0;
+var resultImageArray = [];
+function generateNewLocationQRs(n,r){
+    if(iteration != n){
+        QRCode.toDataURL(generateLocationStr(), function (err, code) {
+            if(err) return console.log("error occurred")
+            console.log(code);
+            let filePath = "./subprograms/qrCodeGenerator/QR_Codes/Loc_QR"+iteration+".png";
+            imageDataURI.outputFile(code, filePath); 
+            resultImageArray.push(filePath);
+            setTimeout(()=>{
+                generateNewLocationQRs(n,r);
+            },100);
+        });
+        iteration++;
+    }else{
+        console.log("creating pdf with these images: "+resultImageArray);
+        iteration=0;
+        resultImageArray = [];
+        r.send(n);
+    }
+}
 
 
 
